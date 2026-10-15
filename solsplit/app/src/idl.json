@@ -1,0 +1,501 @@
+{
+  "address": "5M5cpnesJ6PUzAu3kYeGk6GaiEsL2WgHroLE2FHNTP1R",
+  "metadata": {
+    "name": "splitpay",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "close",
+      "docs": [
+        "Owner closes the split: vault is drained to the owner and the config is closed."
+      ],
+      "discriminator": [
+        98,
+        165,
+        201,
+        177,
+        108,
+        65,
+        206,
+        96
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "split"
+          ]
+        },
+        {
+          "name": "split",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  112,
+                  108,
+                  105,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "split.split_id",
+                "account": "SplitConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "split"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "distribute",
+      "docs": [
+        "Permissionless: sends vault lamports above the rent-exempt minimum to the",
+        "recipients (passed as writable remaining accounts, same order as config)."
+      ],
+      "discriminator": [
+        191,
+        44,
+        223,
+        207,
+        164,
+        236,
+        126,
+        61
+      ],
+      "accounts": [
+        {
+          "name": "split",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  112,
+                  108,
+                  105,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "split.owner",
+                "account": "SplitConfig"
+              },
+              {
+                "kind": "account",
+                "path": "split.split_id",
+                "account": "SplitConfig"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "split"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_split",
+      "docs": [
+        "Owner creates a split config (and its vault address) with up to 10 recipients."
+      ],
+      "discriminator": [
+        126,
+        84,
+        83,
+        247,
+        63,
+        120,
+        56,
+        2
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "split",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  112,
+                  108,
+                  105,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "arg",
+                "path": "split_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "split"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "split_id",
+          "type": "u64"
+        },
+        {
+          "name": "recipients",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "Recipient"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_split",
+      "docs": [
+        "Owner replaces the recipient list."
+      ],
+      "discriminator": [
+        56,
+        99,
+        213,
+        74,
+        47,
+        72,
+        16,
+        202
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "signer": true,
+          "relations": [
+            "split"
+          ]
+        },
+        {
+          "name": "split",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  112,
+                  108,
+                  105,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "account",
+                "path": "split.split_id",
+                "account": "SplitConfig"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "recipients",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "Recipient"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "SplitConfig",
+      "discriminator": [
+        49,
+        201,
+        50,
+        228,
+        22,
+        142,
+        12,
+        222
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "Distributed",
+      "discriminator": [
+        10,
+        212,
+        24,
+        78,
+        35,
+        202,
+        182,
+        134
+      ]
+    },
+    {
+      "name": "SplitCreated",
+      "discriminator": [
+        87,
+        61,
+        160,
+        84,
+        73,
+        204,
+        93,
+        140
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidShareSum",
+      "msg": "Shares must sum to 10000 basis points"
+    },
+    {
+      "code": 6001,
+      "name": "DuplicateRecipient",
+      "msg": "Duplicate recipient"
+    },
+    {
+      "code": 6002,
+      "name": "ZeroShare",
+      "msg": "Share must be greater than zero"
+    },
+    {
+      "code": 6003,
+      "name": "TooManyRecipients",
+      "msg": "Too many recipients (max 10)"
+    },
+    {
+      "code": 6004,
+      "name": "NoRecipients",
+      "msg": "At least one recipient required"
+    },
+    {
+      "code": 6005,
+      "name": "Unauthorized",
+      "msg": "Only the owner can do this"
+    },
+    {
+      "code": 6006,
+      "name": "RecipientMismatch",
+      "msg": "Recipient accounts do not match the split config"
+    },
+    {
+      "code": 6007,
+      "name": "NothingToDistribute",
+      "msg": "Vault has nothing above the rent-exempt minimum"
+    },
+    {
+      "code": 6008,
+      "name": "MathOverflow",
+      "msg": "Arithmetic overflow"
+    }
+  ],
+  "types": [
+    {
+      "name": "Distributed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "split",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Recipient",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pubkey",
+            "type": "pubkey"
+          },
+          {
+            "name": "share_bps",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SplitConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "split_id",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "vault_bump",
+            "type": "u8"
+          },
+          {
+            "name": "total_distributed",
+            "type": "u64"
+          },
+          {
+            "name": "recipients",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "Recipient"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "SplitCreated",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "split",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "count",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}

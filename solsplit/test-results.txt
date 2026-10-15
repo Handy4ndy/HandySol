@@ -1,0 +1,17 @@
+  splitpay
+    ✔ rejects shares that do not sum to 10000 (142ms)
+    ✔ rejects shares that sum above 10000
+    ✔ rejects duplicate recipients
+    ✔ rejects a zero share
+    ✔ rejects more than 10 recipients
+    ✔ happy path: 3 recipients split 50/30/20 (1205ms)
+    ✔ rounding remainder goes to the last recipient (1243ms)
+    ✔ fails distribute when vault is empty (432ms)
+    ✔ fails distribute with wrong recipient accounts (835ms)
+    ✔ lets anyone distribute (1702ms)
+    ✔ owner can update, others cannot (1221ms)
+    ✔ owner can close and reclaim vault funds (1244ms)
+
+
+  12 passing (8s)
+

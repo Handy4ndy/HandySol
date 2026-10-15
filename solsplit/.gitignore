@@ -1,0 +1,15 @@
+# Secrets: never commit keypairs or wallets
+*.json.key
+**/deployer.json
+**/treasury.json
+**/*keypair*.json
+**/id.json
+.env
+.env.*
+# Build and deps
+**/node_modules/
+**/target/
+**/.anchor/
+**/test-ledger/
+**/dist/
+.DS_Store

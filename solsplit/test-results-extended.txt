@@ -1,0 +1,92 @@
+
+
+  splitpay extended
+    init_split validation
+      ✔ 1 rejects sum 9999
+      ✔ 2 rejects sum 10001
+      ✔ 3 accepts 9999 + 1 (181ms)
+      ✔ 4 accepts a single recipient at 10000 (411ms)
+      ✔ 5 accepts exactly 10 recipients (418ms)
+      ✔ 6 rejects 11 recipients
+      ✔ 7 rejects an empty list
+      ✔ 8 rejects a zero share
+      ✔ 9 rejects adjacent duplicates
+      ✔ 10 rejects non-adjacent duplicates (first and last of 10)
+      ✔ 11 rejects u16-max shares (no u16 wrap)
+      ✔ 12 rejects shares that would wrap a u16 sum to 10000 (65535 + 10001)
+      ✔ 13 rejects re-init of the same split id (362ms)
+      ✔ 14 same id under a different owner is an independent split (1251ms)
+      ✔ 15 rejects a split PDA that does not match the seeds
+      ✔ 16 rejects a vault that does not match the seeds
+      ✔ 17 init requires the owner signature (unsigned owner rejected)
+    distribution amounts and rounding
+      ✔ 18 1 bp recipient gets floor(amount/10000) (1232ms)
+      ✔ 19 single recipient at 10000 gets everything above rent min (1252ms)
+      ✔ 20 ten recipients x 1000 with remainder 10001 (1258ms)
+      ✔ 21 vault at exactly rent min: NothingToDistribute (1250ms)
+      ✔ 22 vault empty (below rent min): NothingToDistribute (835ms)
+      ✔ 23 rent min + 1, one recipient: +1 lamport (1671ms)
+      ✔ 24 rent min + 1, 50/50: first 0 (skipped), last 1 (1659ms)
+      ✔ 25 rent min + 7 at 3333/3333/3334: [2,2,3] (1684ms)
+      ✔ 26 rent min + 9999 at 1/1/9998: [0,0,9999] (1672ms)
+      ✔ 27 demo shape: 100000 at 40/30/20/10 exact (1650ms)
+      ✔ 28 large amount: 100,000 SOL at prime-ish shares, exact conservation (1277ms)
+      ✔ 29 repeated distributes accumulate total_distributed (2093ms)
+      ✔ 30 second distribute without new deposit fails (1238ms)
+      ✔ 31 fresh (unfunded) recipient below rent min makes distribute fail atomically (851ms)
+    account substitution and ordering
+      ✔ 32 wrong order rejected
+      ✔ 33 too few accounts rejected
+      ✔ 34 extra account rejected
+      ✔ 35 attacker key substituted rejected
+      ✔ 36 duplicate account meta (A,A,C) rejected
+      ✔ 37 read-only recipient rejected
+      ✔ 38 vault of another split rejected (806ms)
+      ✔ 39 random keypair as vault rejected
+      ✔ 40 config of another split with this vault rejected (405ms)
+      ✔ 41 system-owned fake config rejected (416ms)
+      ✔ 42 wrong system program rejected
+      ✔ 43 after all negatives the correct call still works and conserves (411ms)
+    special recipient keys
+      ✔ 44 recipient = owner works (isolated owner key) (2086ms)
+      ✔ 45 recipient = its own vault: lamports stay in vault but total_distributed is credited (finding) (1674ms)
+      ✔ 46 recipient = its own split config: config account receives lamports (1660ms)
+      ✔ 47 recipient = an executable program account fails (no lamports lost) (859ms)
+    update_split
+      ✔ 48 owner update applies to the next distribute (2089ms)
+      ✔ 49 non-owner update rejected (841ms)
+      ✔ 50 owner key passed without signature rejected (823ms)
+      ✔ 51 update with invalid shares rejected (439ms)
+      ✔ 52 update while funds are pending redirects them to the new set (owner trust, finding) (2490ms)
+      ✔ 53 update from 1 to 10 recipients fits the allocated space (1678ms)
+    close
+      ✔ 54 close returns vault funds and config rent to owner (isolated owner key) (1667ms)
+      ✔ 55 non-owner close rejected (835ms)
+      ✔ 56 distribute after close fails (1673ms)
+      ✔ 57 close then re-init the same id; stranded deposits become distributable (2505ms)
+      ✔ 58 close on an empty vault succeeds (819ms)
+    atomicity and double calls
+      ✔ 59 two distributes in one tx: whole tx fails, nothing moves (1276ms)
+      ✔ 60 deposit, distribute, deposit, distribute in one tx (1662ms)
+      ✔ 61 close then distribute in one tx fails atomically (1258ms)
+      ✔ 62 recipient signing as fee payer and as recipient works (double role) (1666ms)
+    property fuzz
+      ✔ 63 500 random splits: exact parts, conservation, no lamports lost (42230ms)
+
+  splitpay
+    ✔ rejects shares that do not sum to 10000
+    ✔ rejects shares that sum above 10000
+    ✔ rejects duplicate recipients
+    ✔ rejects a zero share
+    ✔ rejects more than 10 recipients
+    ✔ happy path: 3 recipients split 50/30/20 (1177ms)
+    ✔ rounding remainder goes to the last recipient (1252ms)
+    ✔ fails distribute when vault is empty (423ms)
+    ✔ fails distribute with wrong recipient accounts (837ms)
+    ✔ lets anyone distribute (1706ms)
+    ✔ owner can update, others cannot (1220ms)
+    ✔ owner can close and reclaim vault funds (1248ms)
+
+
+  75 passing (2m)
+
